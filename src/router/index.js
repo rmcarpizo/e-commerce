@@ -10,7 +10,6 @@ import Orders from "../pages/Orders.vue"
 import AddProduct from "../pages/AddProduct.vue"
 import EditProduct from "../pages/EditProduct.vue"
 import Profile from "../pages/Profile.vue"
-import AdminUsers from "../pages/AdminUsers.vue"
 import MyOrders from "../pages/MyOrders.vue"
 
 const routes = [
@@ -32,9 +31,6 @@ const routes = [
 
   /* profile */
   { path: "/profile", name: "Profile", component: Profile, meta: { requiresAuth: true } },
-
-  /* admin users */
-  { path: "/admin/users", name: "AdminUsers", component: AdminUsers, meta: { requiresAuth: true, requiresAdmin: true } },
 
   /* admin product management */
   { path: "/add-product", name: "AddProduct", component: AddProduct, meta: { requiresAuth: true, requiresAdmin: true } },

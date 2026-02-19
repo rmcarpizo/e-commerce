@@ -1,3 +1,4 @@
+
 <template>
   <nav class="navbar navbar-expand-lg">
     <div class="container">
@@ -37,10 +38,7 @@
             <RouterLink class="nav-link" to="/orders">Orders</RouterLink>
           </li>
 
-          <!-- users (admin only) -->
-          <li v-if="user.isAdmin" class="nav-item">
-            <RouterLink class="nav-link" to="/admin/users">Users</RouterLink>
-          </li>
+    
 
           <!-- profile -->
           <li class="nav-item">

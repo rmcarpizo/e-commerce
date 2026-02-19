@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed} from "vue";
 import { useRouter, RouterLink } from "vue-router";
 import api from "../api";
 import { useUserStore } from '../stores/user';
@@ -21,6 +21,15 @@ const REGISTER_ENDPOINT = "/users/register";
 function isValidMobile(mobile) {
   return /^\d{11}$/.test(mobile);
 }
+const isFormComplete = computed(() => {
+  return firstName.value.trim() !== '' &&
+         lastName.value.trim() !== '' &&
+         email.value.trim() !== '' &&
+         mobileNumber.value.trim().length === 11 &&
+         password.value.length >= 8 &&
+         verifyPassword.value.length >= 8 &&
+         password.value === verifyPassword.value;
+});
 
 async function register() {
   error.value = "";
@@ -150,17 +159,17 @@ onMounted(() => {
           {{ error }}
         </div>
         
-        <button
-          class="btn btn-danger w-100 py-2"
-          @click="register"
-          :disabled="loading"
-        >
-          <span
-            v-if="loading"
-            class="spinner-border spinner-border-sm me-2"
-          ></span>
-          Please enter your registration details
-        </button>
+       <button
+        :class="isFormComplete ? 'btn btn-success w-100 py-2' : 'btn btn-danger w-100 py-2'"
+        @click="register"
+        :disabled="loading"
+      >
+        <span
+          v-if="loading"
+          class="spinner-border spinner-border-sm me-2"
+        ></span>
+        {{ isFormComplete ? 'Create Account' : 'Please enter your registration details' }}
+      </button>
       </div>
     </div>
     

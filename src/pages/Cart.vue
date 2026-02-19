@@ -52,7 +52,7 @@
                 </button>
               </div>
             </td>
-            <td>₱{{ item.subtotal }}</td>
+            <td>₱{{ item.subtotal.toFixed(2) }}</td>
             <td>
               <button 
                 class="btn btn-danger btn-sm"
@@ -66,7 +66,7 @@
       </table>
 
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4>Total: <span class="text-warning">₱{{ totalPrice }}</span></h4>
+        <h4>Total: <span class="text-warning">₱{{ totalPrice.toFixed(2) }}</span></h4>
       </div>
 
       <div class="d-flex gap-2">
@@ -119,7 +119,28 @@ const fetchCart = async () => {
   isLoading.value = true
   try {
     const res = await api.get('/cart')
-    cartItems.value = res.data
+    const items = res.data
+    
+    
+    const itemsWithNames = await Promise.all(
+      items.map(async (item) => {
+        try {
+          const productRes = await api.get(`/products/${item.productId}`)
+          return {
+            ...item,
+            productName: productRes.data.name
+          }
+        } catch (error) {
+          console.error(`Failed to fetch product ${item.productId}:`, error)
+          return {
+            ...item,
+            productName: 'Unknown Product'
+          }
+        }
+      })
+    )
+    
+    cartItems.value = itemsWithNames
   } catch (error) {
     console.error('Failed to fetch cart:', error)
   }
@@ -128,11 +149,13 @@ const fetchCart = async () => {
 
 const updateQuantity = async (productId, newQuantity) => {
   try {
-    const res = await api.patch('/cart/update-cart-quantity', {
+    await api.patch('/cart/update-cart-quantity', {
       productId,
       newQuantity
     })
-    cartItems.value = res.data
+    
+    
+    await fetchCart()
   } catch (error) {
     errorMessage.value = 'Failed to update quantity'
   }
@@ -140,8 +163,10 @@ const updateQuantity = async (productId, newQuantity) => {
 
 const removeItem = async (productId) => {
   try {
-    const res = await api.delete(`/cart/${productId}/remove-from-cart`)
-    cartItems.value = res.data
+    await api.delete(`/cart/${productId}/remove-from-cart`)
+    
+    
+    await fetchCart()
   } catch (error) {
     errorMessage.value = 'Failed to remove item'
   }

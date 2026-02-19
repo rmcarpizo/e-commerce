@@ -3,7 +3,7 @@ import axios from "axios";
 // Create an instance of axios that we can use throughout our application
 // Use the environment variable VITE_JOB_TRACKER_API to set the base URL for our API
 const api = axios.create({
-    baseURL: import.meta.env.VITE_ECOMMERCE_API,
+    baseURL: import.meta.env.VITE_JOB_TRACKER_API,
 });
 
 // Add an interceptor to add the Authorization header to all our requests
